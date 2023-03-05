@@ -1,0 +1,110 @@
+CREATE TABLE `kidsfashion`.`accounts` ( `ID` INT NOT NULL AUTO_INCREMENT , `USERNAME` VARCHAR(255) NOT NULL , `EMAIL` VARCHAR(255) NOT NULL , `PASSWORD` VARCHAR(255) NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB;
+
+
+CREATE TABLE `kidsfashion`.`products` ( `CODE` VARCHAR(11) NOT NULL , `NAME` VARCHAR(255) NOT NULL , `IMAGE` VARCHAR(255) NOT NULL , `PRICE` INT(100) NOT NULL,`TREND` VARCHAR(11) NULL, `CATEGORY` VARCHAR(11) NOT NULL ) ENGINE = InnoDB;
+
+
+
+INSERT INTO `products`(`CODE`, `NAME`, `IMAGE`, `PRICE`,`TREND`,`CATEGORY`) 
+VALUES 
+('top001','Big Kids Boys Graphic Training Top','Big Kids Boys Graphic Training Top.webp',10000,'ntrend','top'),
+
+('top002','Big Kids Girls Cropped TShirt','Big Kids Girls Cropped TShirt.webp',11000,'ntrend','top'),
+
+('top003','Big Kids Oversize Pullover Basketball Hoodie','Big Kids Oversize Pullover Basketball Hoodie.webp',9500,'ntrend','top'),
+
+('top004','Big Kids TShirt','Big Kids TShirt.webp',9000,'ntrend','top'),
+
+('top005','Black Adidas T-shirt','Black Adidas T-shirt.webp',12000,'ntrend','top'),
+
+('top006','Classics Big Kids Graphic Tee','Classics Big Kids Graphic Tee.webp',10500,'ntrend','top'),
+
+('top007','Defacto Boy REGULAR FIT Knitted Athlete-White','Defacto Boy REGULAR FIT Knitted Athlete-White.jpg',8000,'trend','top'),
+
+('top008','Defacto Girl Short Sleeve Blouse - Multi','Defacto Girl Short Sleeve Blouse - Multi.jpg',11000,'trend','top'),
+
+('top009','Fit Big Kids Quarter Zip Top','Fit Big Kids Quarter Zip Top.webp',10000,'ntrend','top'),
+
+('top010','Iconic T7 Boys Track Jacket','Iconic T7 Boys Track Jacket.webp',11500,'ntrend','top'),
+
+('top011','PUMA x POKÉMON Big Kids Crewneck Sweatshirt','PUMA x POKÉMON Big Kids Crewneck Sweatshirt.webp',9000,'ntrend','top'),
+
+('top012','Scribble Dribble Big Kids Basketball Tee','Scribble Dribble Big Kids Basketball Tee.jpg',9500,'ntrend','top'),
+
+('top013','Short sleeve Comfy wear','Short sleeve Comfy wear.webp',12500,'ntrend','top'),
+
+('top014','T7 Vacay Queen Big Kids Graphic Tee','T7 Vacay Queen Big Kids Graphic Tee.webp',11000,'ntrend','top'),
+
+('top015','T7 Vacay Queen Big Kids Tee','T7 Vacay Queen Big Kids Tee.webp',12000,'trend','top'),
+
+
+
+('und001','Summer Childrens Boxer Underwears 4-Packs For 3-8 Years Old Kids','Summer Childrens Boxer Underwears 4-Packs For 3-8 Years Old Kids.webp',7000,'ntrend','underwears'),
+
+('und002','Defacto Boy REGULAR FIT Underwear Knitted Boxer','Defacto Boy REGULAR FIT Underwear Knitted Boxer.jpg',4000,'ntrend','underwears'),
+
+('und003','George Kids Pants Girls Panties Knickers Children Underwear','George Kids Pants Girls Panties Knickers Children Underwear.jpg',6000,'ntrend','underwears'),
+
+('und004','Breathable Girls Cotton Sling Vest','Breathable Girls Cotton Sling Vest.webp',5500,'ntrend','underwears'),
+
+('und005','Go Jetters Boys 3 Pack Pant','Go Jetters Boys 3 Pack Pant.jpg',4000,'trend','underwears'),
+
+('und006','Half Terry Quater Length Thick Socks','Half Terry Quater Length Thick Socks.webp',3000,'ntrend','underwears'),
+
+('und007','Kids Girl Cotton Sport Training Bra','Kids Girl Cotton Sport Training Bra.webp',5000,'ntrend','underwears'),
+
+('und008','Kids Low Cuts Sock','Kids Low Cuts Sock.webp',3000,'ntrend','underwears'),
+
+('und009','makle kids boxer','makle kids boxer.webp',6500,'ntrend','underwears'),
+
+('und010','Nike Dri-FIT Alate All U','Nike Dri-FIT Alate All U.webp',6000,'ntrend','underwears'),
+
+('und011','Nike Dri-FIT Swoosh','Nike Dri-FIT Swoosh.webp',6500,'ntrend','underwears'),
+
+('und012','Ozlem Children Singlets For Girls- 6in1 White','Ozlem Children Singlets For Girls- 6in1 White.jpg',4000,'trend','underwears'),
+
+('und013','Sports Performance Graphic Boxer','Sports Performance Graphic Boxer.webp',5000,'ntrend','underwears'),
+
+('und014','Stylish Children Girls Boxers Pants 4','Stylish Children Girls Boxers Pants 4.jpg',6000,'ntrend','underwears'),
+
+('und015','Young ladies dark underwear','Young ladies dark underwear.webp',7000,'trend','underwears'),
+
+
+
+('bottom001','Adicolor Essentials Trevoil Shorts','Adicolor Essentials Trevoil Shorts.webp',20000,'ntrend','bottom'),
+
+('bottom002','adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training','adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training.webp',22000,'ntrend','bottom'),
+
+('bottom003','Fit Big Kids Woven Shorts','Fit Big Kids Woven Shorts.webp',17000,'trend','bottom'),
+
+('bottom004','Graphic Tee and Short Set','Graphic Tee and Short Set.webp',19500,'trend','bottom'),
+
+('bottom005','Hypergram Techfit Zebra Short leggings','Hypergram Techfit Zebra Short leggings.webp',18000,'ntrend','bottom'),
+
+('bottom006','Nike Dri-FIT Multi+','Nike Dri-FIT Multi+.webp',15000,'ntrend','bottom'),
+
+('bottom007','Nike Dri-fit','Nike Dri-fit.webp',17500,'ntrend','bottom'),
+
+('bottom008','Nike I.A.I.R Fleece Shorts','Nike I.A.I.R Fleece Shorts.webp',18000,'trend','bottom'),
+
+('bottom009','Nike Sportswear A.I.R Iron Fleece','Nike Sportswear A.I.R Iron Fleece.webp',15500,'ntrend','bottom'),
+
+('bottom010','Nike Sportswear','Nike Sportswear.webp',16000,'ntrend','bottom'),
+
+('bottom011','PUMA Mate T7 Little Kids Sweatpants','PUMA Mate T7 Little Kids Sweatpants.webp',19500,'ntrend','bottom'),
+
+('bottom012','PUMA Mates T7 Little Kids Sweatpants','PUMA Mates T7 Little Kids Sweatpants.webp',18000,'ntrend','bottom'),
+
+('bottom013','PUMA x POKÉMON Big Kids Sweatpants','PUMA x POKÉMON Big Kids Sweatpants.webp',17500,'ntrend','bottom'),
+
+('bottom014','Strong Big Kids Wove Shorts','Strong Big Kids Wove Shorts.webp',20000,'ntrend','bottom'),
+
+('bottom015','Tiro 23 league shorts','Tiro 23 league shorts.webp',15600,'ntrend','bottom');
+
+
+
+
+
+
+
+
