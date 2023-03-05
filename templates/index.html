@@ -1,1 +1,86 @@
 
+{% extends 'base.html' %}
+{% block title%}Kids Fashion Website | Home {% endblock %}
+
+{% block content %}
+<section class="image_section">
+  <div class="image">
+   <h1> <span class="white">Best Kids</span> <span class="orangered">Fashion Store</span> </h1>
+   <p>Kids Fashion Shop is a nigerian store that deals strictly in quality kids wears</p>
+   <button type="submit">Explore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/explore" class="icon"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+  </div>
+</section>
+
+<section class="section">
+  <h1>What are you buying?</h1>
+  <div class="grid-container">
+    <div class="item1">
+     
+      <button>Top &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/top" class="icon"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+    </div>
+    <div class="item2">
+      
+      <button>Bottom &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/bottom" class="icon"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+    </div>
+    <div class="item3">
+      
+      <button>Underwears &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/underwears" class="icon"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+    </div>  
+  </div>
+</section>
+
+<section class="fixed">
+  <h1>THE FUTURE IS HERE</h1>
+</section>
+
+<section class="trend">
+      <h1 class="text">TRENDING COLLECTIONS&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-arrow-right-long"></i></h1>
+      <p class="new">Swipe right to see more items</p>
+      <div class="container-scroller">
+      {% for item in trend %}
+        <div class="click">
+          <img src="/static/img/products/{{ item.IMAGE }}" alt="" class="view"  data-name="{{ item.NAME }}">
+            <h6>{{item.NAME}}</h6>
+            <p class="view" data-name="{{ item.NAME }}"> SHOP NOW</p>
+        </div>
+      {% endfor %}
+      </div>
+</section>
+
+<div class="container">
+  <div class="products-preview">
+    {% for item in trend %}
+    <div class="preview" data-target="{{ item.NAME }}">
+      <i class="fa-solid fa-arrow-right"></i>
+      <br>
+          <img src="/static/img/products/{{ item.IMAGE }}" alt="">
+
+          {% if 'loggedin' in session %}
+          <form action="/addtrend" method="post">
+            <h3><strong>{{ item.NAME }}</strong></h3>
+            <input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+            ₦{{ item.PRICE }}
+            <br>
+            <input type="hidden" name="code" value="{{ item.CODE }}" />
+            <input type="submit" value="Add to Cart" class="cart" />
+            <input type="submit" value="Buy Now"/>
+          </form>
+          {% endif %}
+
+          {% if 'loggedin' not in session %}
+          <form action="/login" method="post">
+            <h3><strong>{{ item.NAME }}</strong></h3>
+            <input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+            ₦{{ item.PRICE }}
+            <br>
+            <input type="hidden" name="code" value="{{ item.CODE }}" />
+            <input type="submit" value="Add to Cart" class="cart" onclick='alert("You are not logged in, log in to add to cart")'/>
+            <input type="submit" value="Buy Now" onclick='alert("You are not logged in, log in to add to cart")'/>
+          </form>
+          {% endif %}
+     </div>
+  {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
