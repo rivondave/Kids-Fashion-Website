@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>{% block title%}Kids Fashion Website{% endblock %}</title>
+</head>
+<body>
+    
+    <section class="kidsheader">
+        
+        <div class="logo">
+           <a href="/"><img src="/static/img/global/logo.png" alt="...."></a>
+           <a href="/"><p><strong> Kids Fashion</strong> Shop</p></a>
+        </div>
+        
+    
+        <ul class="kidsnavbar">
+            <li><a href="/top" id="chic">Top</a></li>
+            <li><a href="/bottom" id="chic">Bottom</a></li>
+            <li><a href="/underwears" id="chic">Underwears</a></li>
+            <li><a href="/explore" id="chic">Explore</a></li>
+            <li><a href="/brands" id="chic">Brands</a></li>
+        </ul>
+        
+        {% if 'loggedin' in session %}
+        <div class="main">
+            <input type="search" placeholder="Search">
+            <a href="/profile" class="user"><i class="fa-regular fa-user" id="icon"></i><span id="output"></span></a>
+            <a href="/cart"  class="user" id="chic"><i class="fa-solid fa-cart-shopping" id="icon"></i><span id="cart" class="total-count" style="color:white;font-size:9px;text-align:center;">0</span></a>
+            <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </div>
+        {% endif %}
+
+        {% if 'loggedin' not in session %}
+        <div class="main">
+            <input type="search" placeholder="Search">
+            <a href="/login" class="user"><i class="fa-solid fa-right-to-bracket"></i><span id="output"></span></a>
+            <a href="/cart"  class="user" id="chic"><i class="fa-solid fa-cart-shopping" id="icon"></i><span id="cart" class="total-count" style="color:white;font-size:9px;text-align:center;">0</span></a>
+            <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </div>
+        {% endif %}
+
+    </section>
+    
+    <section class="space"></section>
+    {% block content %}
+    {% endblock %}
+
+    <div class="footer">
+        Copyright&copy; 2023 Made with ❤️ from rivondave
+    </div>
+
+<section class="none">
+{% if 'cart_item' in session %}
+<section id="empty" class="container">
+    <button type="submit" class="button" id="button">EMPTY CART &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/empty"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+</section>
+
+<section id="cart-container" class="container my-5">
+    <table width="100%" id="myTable">
+        <thead>
+            <tr>
+                <td>Delete</td>
+                <td>Image</td>
+                <td>Product</td>
+                <td>Price (₦)</td>
+                <td>Quantity</td>
+                <td>Total (₦)</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, val in session['cart_item'].items() %}
+            {% set quantity = session['cart_item'][key]['quantity'] %}
+            {% set price = session['cart_item'][key]['price'] %}
+            {% set total_price = session['cart_item'][key]['total_price'] %}
+            <tr>
+                <td><a href="{{ url_for('.delete_product',code=session['cart_item'][key]['code'])}}"><i class="fa-solid fa-trash"></i></a></td>
+                <td><img src="/static/img/products/{{ session['cart_item'][key]['image'] }}" alt=""></td>
+                <td>{{ session['cart_item'][key]['name'] }}</td>
+                <td id="price">{{ price }}</td>
+                <!-- <td><input value="{{ quantity }}" type="number" id="num"></td> -->
+                <td>{{ quantity }}</td>
+                <td>{{ total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="container" id="cart-bottom">
+    <div class="row">
+        <div class="coupon col-lg-6 col-md-6 col-12 mb-4">
+            <div>
+                <h5>COUPON</h5>
+                <p>Enter your coupon if you have one.</p>
+                <input type="text" name="" id="" placeholder="Coupon Code">
+                <button type="submit" class="button">APPLY COUPON &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+            </div>
+        </div>
+        <div class="total col-lg-6 col-md-6 col-12">
+            <div>
+                <h5>CART TOTAL</h5>
+                <div class="d-flex justify-content-between"> 
+                    <h6>Subtotal</h6>
+                    <p id="subtotal-none"></p>
+                    <p id="subtotal"></p>
+                </div>
+                <div class="d-flex justify-content-between"> 
+                    <h6>Shipping</h6>
+                    <p id="shipping-none">0</p>
+                    <p id="shipping"></p>
+                </div>
+                <hr class="second-hr">
+                <div class="d-flex justify-content-between"> 
+                    <h6>Total</h6>
+                    <p id="total"></p>
+                </div>
+
+                <button type="submit" class="button">CHECKOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+            </div>
+        </div>
+    </div>
+</section>
+{% else: %}
+    <div class="class"><h3 style="text-align:center;">Cart is empty</h3></div>
+{% endif %}
+</section>
+
+    <script>
+        // GETTING TOTAL QUANTITY AND PRICE
+        var price = document.getElementById("myTable"), quantity=0, total=0;
+        for(var i = 1; i < price.rows.length; i++)
+        {
+          quantity = quantity - price.rows[i].cells[4].innerHTML;
+          total = total - price.rows[i].cells[5].innerHTML;
+        }
+        document.getElementById("cart").innerHTML= -quantity;
+        document.getElementById("subtotal-none").innerHTML= -total;
+        document.getElementById("subtotal").innerHTML= "₦" + -total;
+    </script>
+
+    <script>
+        // GETTING THE VALUE OF SHIPPING
+        var total_quantity = document.getElementById("cart").innerHTML, shipping=500;
+
+        total_shipping = parseInt(total_quantity) * parseInt(shipping);
+
+        document.getElementById('shipping-none').innerHTML = total_shipping;
+        document.getElementById("shipping").innerHTML = "₦" + total_shipping;
+    </script>
+
+    <script>
+        // GETTING TOTAL VALUE + SHIPPING
+        var subtotal = document.getElementById("subtotal-none").innerHTML;
+        var shipping = document.getElementById('shipping-none').innerHTML;
+
+        total = parseInt(subtotal) + parseInt(shipping);
+
+        document.getElementById("total").innerHTML = "₦" + total;
+    </script>
+
+    <style>
+        #subtotal-none{
+            display: none;
+        }
+        #shipping-none{
+            display: none;
+        }
+        .none{
+            display: none;
+        }
+    </style>
+
+
+
+    <script src="/static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+</body>
+</html>

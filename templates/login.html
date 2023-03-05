@@ -1,0 +1,25 @@
+{% extends 'base2.html' %}
+{% block title %}Kids Fashion Website | Login {% endblock %}
+{% block form %}
+<form action="/login" method="post">
+    <a href="/"><img src="/static/img/global/logo.png" alt="...."></a>
+    
+    <h1>Login</h1>
+    <p class="text">Login to purchase good quality clothes from kids fashion website </p>
+    <p class="red" style="color: red;">{{ msg }}</p>
+    <!-- Username -->
+    <input type="text" name="username" id="" placeholder="Username" required>
+    <i class="fa-solid fa-user"></i>
+    <br>
+
+    <!-- Password -->
+    
+    <input type="password" name="password" id="password" placeholder="Password" required>
+    <i class="fa-solid fa-lock" id="togglePassword"></i>
+    <br>
+    <a href="/change_password" class="password">Forgot Password</a>
+    <!-- Submit Button -->
+    <input type="submit" value="Login">
+    <p class="question">Don't have an account?<a href="/register"> register </a></p>
+</form>
+{% endblock %}

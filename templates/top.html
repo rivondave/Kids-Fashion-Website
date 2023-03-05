@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title%}Kids Fashion Website | Top {% endblock %}
+{% block content %}
+
+<section class="product-carousel" id="kidstop">
+  <div class="carou">
+    <h1>Kids Top</h1>
+   <button type="submit">Explore &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/explore" class="icon"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+  </div>
+</section>
+
+<h1 class="text-center">OUR PRODUCTS</h1>
+<div class="product-container">
+  <div class="row">
+      {% for item in top %}
+      <div class="col-4">
+        <div class="click">
+          <img src="/static/img/products/{{ item.IMAGE }}" alt="" class="view"  data-name="{{ item.NAME }}">
+            <h6>{{ item.NAME }}</h6>
+            <p class="view"  data-name="{{ item.NAME }}"> PURCHASE</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+
+<div class="container">
+  <div class="products-preview">
+    {% for item in top %}
+    <div class="preview" data-target="{{ item.NAME }}">
+      <i class="fa-solid fa-arrow-right"></i>
+      <br>
+          <img src="/static/img/products/{{ item.IMAGE }}" alt="">
+          <br>
+          {% if 'loggedin' in session %}
+          <form action="/addtop" method="post">
+            <h3>{{ item.NAME }}</h3>
+            <input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+            ₦{{ item.PRICE }}
+            <br>
+            <input type="hidden" name="code" value="{{ item.CODE }}" />
+            <input type="submit" value="Add to Cart" class="cart"/>
+            <input type="submit" value="Buy Now"/>
+          </form>
+          {% endif %}
+
+          {% if 'loggedin' not in session %}
+          <form action="/login" method="post">
+            <h3><strong>{{ item.NAME }}</strong></h3>
+            <input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+            ₦{{ item.PRICE }}
+            <br>
+            <input type="hidden" name="code" value="{{ item.CODE }}" />
+            <input type="submit" value="Add to Cart" class="cart"  onclick='alert("You are not logged in, log in to add to cart")'/>
+            <input type="submit" value="Buy Now" onclick='alert("You are not logged in, log in to add to cart")'/>
+          </form>
+          {% endif %}
+     </div>
+  {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title%}Kids Fashion Website | Profile {% endblock %}
+{% block content%}
+Welcome to Profile Page
+<a href="/">Back To Home</a>
+
+{% if 'loggedin' in session %}
+<a href="/logout">Logout</a>
+{% endif %}
+
+{% if 'loggedin' not in session %}
+<a href="/login">Login</a>
+{% endif %}
+
+{% endblock %}
