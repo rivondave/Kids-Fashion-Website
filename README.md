@@ -36,3 +36,4 @@ FullStack Web Application using Flask, MySQL , HTML and CSS
 7. Templates not done
 - Profile page
 - Explore page
+ 
