@@ -3,15 +3,14 @@ from flaskext.mysql import MySQL
 import pymysql
 import re
 
-# session.permanent - if set to false, user will be deleted when browser is closed
 
 app = Flask(__name__,template_folder = "templates")
 app.secret_key = 'anything'
 
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_DB'] = 'kidsfashion'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_HOST'] = 'enter_your_host_name'
+app.config['MYSQL_DATABASE_USER'] = 'enter_username'
+app.config['MYSQL_DATABASE_DB'] = 'enter_database'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'enter_password' #if no password, leave blank
 
 mysql = MySQL()
 mysql.init_app(app)
