@@ -1,25 +1,33 @@
 # Kids-Fashion-Website
-FullStack Web Application using Flask, MySQL , HTML and CSS
+## FullStack Web Application using Flask, MySQL , HTML and CSS
 
+Prerequisites
+-------------
+1. Have python installed
+2. MySQL database
+
+Installation
+---------------
 1. To get started, install flask
 
-.. code-block:: text
+```
 
     $pip3 install -U flask
-    
+```
+
 2. Install flaskext
 
-.. code-block:: text
+```
 
-      $pip install Flask-MySQL
-      
+    $pip install Flask-MySQL
+```
+ 
 3. Install pymysql
 
-.. code-block:: text
+```
 
-      $pip install PyMySQL
-
-        
+    $pip install PyMySQL
+```       
         
 4. Create a database called 'kidsfashion' 
 
@@ -35,7 +43,7 @@ FullStack Web Application using Flask, MySQL , HTML and CSS
 
 
 
-8. Templates not done
+8. Some templates have not been crreated
 - Profile page
 - Explore page
  
