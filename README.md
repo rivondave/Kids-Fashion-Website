@@ -3,10 +3,10 @@
 
 Prerequisites
 -------------
-1. Have python installed
+1. Have python installed/knowledge of it
 2. MySQL database
 
-Installation
+Installation & Setup Dependencies
 ---------------
 1. To get started, install flask
 
@@ -42,8 +42,28 @@ Installation
 ![ezgif-1-329ef6e1ec](https://user-images.githubusercontent.com/74568105/223013824-aebb5545-95b7-4f41-9ae8-c1e5fda1bffb.gif)
 
 
+About
+-----
 
-8. Some templates have not been crreated
-- Profile page
-- Explore page
- 
+A fullstack Kids Fashion Website, that sells kids top, shorts/bottom wear and underwears.
+
+This project is open source to any fullstack developer who uses flask.
+
+
+Functionalities
+---------------
+
+Login
+
+Register
+
+Logout
+
+Add to Cart
+
+Change Password
+
+
+How to Contribute To This Project
+---------------------------------
+See contribution.md file
