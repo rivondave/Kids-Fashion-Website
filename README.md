@@ -19,17 +19,17 @@ Installation & Setup Dependencies
 
 ```
 
-    $pip install Flask-MySQL
+    $pip3 install Flask-MySQL
 ```
  
 3. Install pymysql
 
 ```
 
-    $pip install PyMySQL
+    $pip3 install PyMySQL
 ```       
         
-4. Create a database called 'kidsfashion' 
+4. Create a database/schema called 'kidsfashion' in your MySQL server, e.g XAMPP, SQL SERVER, MySQL Workbench e.t.c
 
 5. Open the sql.txt file and run the queries in your MySQL to create tables and insert values
 
