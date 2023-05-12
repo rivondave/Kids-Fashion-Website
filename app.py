@@ -25,6 +25,10 @@ def index():
     rows = cursor.fetchall()
     return render_template('index.html',trend = rows)
 
+@app.route('/product/<string:product>')
+def single_product(product):
+    return render_template('product.html')
+
 @app.route('/bottom')
 def bottom():
     cursor.execute("SELECT * FROM products WHERE CATEGORY = 'bottom'")
