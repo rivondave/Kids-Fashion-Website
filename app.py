@@ -7,10 +7,10 @@ import re
 app = Flask(__name__,template_folder = "templates")
 app.secret_key = 'anything'
 
-app.config['MYSQL_DATABASE_HOST'] = 'enter_your_host_name'
-app.config['MYSQL_DATABASE_USER'] = 'enter_username'
-app.config['MYSQL_DATABASE_DB'] = 'enter_database'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'enter_password' #if no password, leave blank
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_DB'] = 'kidsfashion'
+app.config['MYSQL_DATABASE_PASSWORD'] = '' #if no password, leave blank
 
 mysql = MySQL()
 mysql.init_app(app)
@@ -27,7 +27,9 @@ def index():
 
 @app.route('/product/<string:product>')
 def single_product(product):
-    return render_template('product.html')
+    cursor.execute("SELECT * FROM products WHERE NAME = %s",(product))
+    rows = cursor.fetchone()
+    return render_template('product.html',product=rows)
 
 @app.route('/bottom')
 def bottom():
@@ -204,60 +206,8 @@ def delete_product(code):
 
 
 # CART
-
-@app.route('/addtrend', methods=['POST'])
-def addtrend():
-
-    # cursor = None
-
-    _quantity = int (request.form['quantity'])
-    _code = request.form['code']
-    #validate the received values
-    if _quantity and _code and request.method == 'POST':
-
-        
-        cursor.execute("SELECT * FROM products WHERE CODE=%s", (_code,))
-        row = cursor.fetchone()
-        
-        itemArray = { row['CODE'] : {'name' : row['NAME'], 'code' : row['CODE'], 'quantity' :_quantity, 'price' : row['PRICE'], 'image' : row['IMAGE'], 'total_price': _quantity * row['PRICE'] }}
-
-        all_total_price =0
-        all_total_quantity = 0
-
-        session.modified = True
-        if 'cart_item' in session:
-
-            if row['CODE'] in session['cart_item']:
-                for key,value in session['cart_item'].items():
-                    if row['CODE'] == key:
-                        old_quantity = session['cart_item'][key]['quantity']
-                        total_quantity = old_quantity + _quantity
-                        session['cart_item'][key]['quantity'] = total_quantity
-                        session['cart_item'][key]['total_price'] = int(total_quantity * row['PRICE'])
-            else:   
-                session['cart_item'] = array_merge(session['cart_item'], itemArray)
-
-            for key, value in session['cart_item'].items():
-                individual_quantity = int(session['cart_item'][key]['quantity'])
-                individual_price = float(session['cart_item'][key]['total_price'])
-                all_total_quantity = all_total_quantity + individual_quantity
-                all_total_price = all_total_price + individual_price
-
-        else:
-            session['cart_item'] = itemArray
-            all_total_quantity = all_total_quantity+ _quantity
-            all_total_price = all_total_price + _quantity * row['PRICE']
-
-        session['all_total_quantity'] = all_total_quantity
-        session['all_total_price'] = all_total_price
-
-        return redirect(url_for('.index'))
-    else:
-        return 'Error while adding item to cart'
-    
-@app.route('/addbottom', methods=['POST'])
-def addbottom():
-
+@app.route('/add', methods=['POST'])
+def add():
     _quantity = int (request.form['quantity'])
     _code = request.form['code']
     #validate the received values
@@ -298,106 +248,9 @@ def addbottom():
         session['all_total_quantity'] = all_total_quantity
         session['all_total_price'] = all_total_price
 
-        return redirect(url_for('.bottom'))
+        return redirect(url_for('.single_product',product=row['NAME']))
     else:
         return 'Error while adding item to cart'
-    
-
-@app.route('/addtop', methods=['POST'])
-def addtop():
-    _quantity = int (request.form['quantity'])
-    _code = request.form['code']
-    #validate the received values
-    if _quantity and _code and request.method == 'POST':
-
-        cursor.execute("SELECT * FROM products WHERE CODE=%s", (_code,))
-        row = cursor.fetchone()
-        
-        itemArray = { row['CODE'] : {'name' : row['NAME'], 'code' : row['CODE'], 'quantity' :_quantity, 'price' : row['PRICE'], 'image' : row['IMAGE'], 'total_price': _quantity * row['PRICE'] }}
-
-        all_total_price =0
-        all_total_quantity = 0
-
-        session.modified = True
-        if 'cart_item' in session:
-
-            if row['CODE'] in session['cart_item']:
-                for key,value in session['cart_item'].items():
-                    if row['CODE'] == key:
-                        old_quantity = session['cart_item'][key]['quantity']
-                        total_quantity = old_quantity + _quantity
-                        session['cart_item'][key]['quantity'] = total_quantity
-                        session['cart_item'][key]['total_price'] = int(total_quantity * row['PRICE'])
-            else:   
-                session['cart_item'] = array_merge(session['cart_item'], itemArray)
-
-            for key, value in session['cart_item'].items():
-                individual_quantity = int(session['cart_item'][key]['quantity'])
-                individual_price = float(session['cart_item'][key]['total_price'])
-                all_total_quantity = all_total_quantity + individual_quantity
-                all_total_price = all_total_price + individual_price
-
-        else:
-            session['cart_item'] = itemArray
-            all_total_quantity = all_total_quantity+ _quantity
-            all_total_price = all_total_price + _quantity * row['PRICE']
-
-        session['all_total_quantity'] = all_total_quantity
-        session['all_total_price'] = all_total_price
-
-        return redirect(url_for('.top'))
-    else:
-        return 'Error while adding item to cart'
-    
-@app.route('/addunderwears', methods=['POST'])
-def addunderwears():
-
-    _quantity = int (request.form['quantity'])
-    _code = request.form['code']
-    #validate the received values
-    if _quantity and _code and request.method == 'POST':
-
-        cursor.execute("SELECT * FROM products WHERE CODE=%s", (_code,))
-        row = cursor.fetchone()
-        
-        itemArray = { row['CODE'] : {'name' : row['NAME'], 'code' : row['CODE'], 'quantity' :_quantity, 'price' : row['PRICE'], 'image' : row['IMAGE'], 'total_price': _quantity * row['PRICE'] }}
-
-        all_total_price =0
-        all_total_quantity = 0
-
-        session.modified = True
-        if 'cart_item' in session:
-
-            if row['CODE'] in session['cart_item']:
-                for key,value in session['cart_item'].items():
-                    if row['CODE'] == key:
-                        old_quantity = session['cart_item'][key]['quantity']
-                        total_quantity = old_quantity + _quantity
-                        session['cart_item'][key]['quantity'] = total_quantity
-                        session['cart_item'][key]['total_price'] = int(total_quantity * row['PRICE'])
-            else:   
-                session['cart_item'] = array_merge(session['cart_item'], itemArray)
-
-            for key, value in session['cart_item'].items():
-                individual_quantity = int(session['cart_item'][key]['quantity'])
-                individual_price = float(session['cart_item'][key]['total_price'])
-                all_total_quantity = all_total_quantity + individual_quantity
-                all_total_price = all_total_price + individual_price
-
-        else:
-            session['cart_item'] = itemArray
-            all_total_quantity = all_total_quantity+ _quantity
-            all_total_price = all_total_price + _quantity * row['PRICE']
-
-        session['all_total_quantity'] = all_total_quantity
-        session['all_total_price'] = all_total_price
-
-        return redirect(url_for('.underwears'))
-    else:
-        return 'Error while adding item to cart'
-
-
-
 
 
 if __name__ == '__main__':

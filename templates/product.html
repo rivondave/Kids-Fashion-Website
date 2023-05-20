@@ -1,1 +1,28 @@
 {% extends 'base.html' %}
+{% block content %}
+<img src="/static/img/products/{{ product.IMAGE }}" alt="">
+<br>
+{% if 'loggedin' in session %}
+<form action="/add" method="post">
+<h3>{{ product.NAME }}</h3>
+<input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+₦{{ product.PRICE }}
+<br>
+<input type="hidden" name="code" value="{{ product.CODE }}" />
+<input type="submit" value="Add to Cart" class="cart"/>
+<input type="submit" value="Buy Now"/>
+</form>
+{% endif %}
+
+{% if 'loggedin' not in session %}
+<form action="/login" method="post">
+<h3><strong>{{ product.NAME }}</strong></h3>
+<input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
+₦{{ product.PRICE }}
+<br>
+<input type="hidden" name="code" value="{{ product.CODE }}" />
+<input type="submit" value="Add to Cart" class="cart"  onclick='alert("You are not logged in, log in to add to cart")'/>
+<input type="submit" value="Buy Now" onclick='alert("You are not logged in, log in to buy now")'/>
+</form>
+{% endif %}
+{% endblock %}
