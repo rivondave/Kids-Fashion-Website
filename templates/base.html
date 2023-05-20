@@ -59,79 +59,78 @@
     </div>
 
 <section class="none">
-{% if 'cart_item' in session %}
-<section id="empty" class="container">
-    <button type="submit" class="button" id="button">EMPTY CART &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/empty"><i class="fa-solid fa-arrow-right-long"></i></a></button>
-</section>
-
-<section id="cart-container" class="container my-5">
-    <table width="100%" id="myTable">
-        <thead>
-            <tr>
-                <td>Delete</td>
-                <td>Image</td>
-                <td>Product</td>
-                <td>Price (₦)</td>
-                <td>Quantity</td>
-                <td>Total (₦)</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, val in session['cart_item'].items() %}
-            {% set quantity = session['cart_item'][key]['quantity'] %}
-            {% set price = session['cart_item'][key]['price'] %}
-            {% set total_price = session['cart_item'][key]['total_price'] %}
-            <tr>
-                <td><a href="{{ url_for('.delete_product',code=session['cart_item'][key]['code'])}}"><i class="fa-solid fa-trash"></i></a></td>
-                <td><img src="/static/img/products/{{ session['cart_item'][key]['image'] }}" alt=""></td>
-                <td>{{ session['cart_item'][key]['name'] }}</td>
-                <td id="price">{{ price }}</td>
-                <!-- <td><input value="{{ quantity }}" type="number" id="num"></td> -->
-                <td>{{ quantity }}</td>
-                <td>{{ total_price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</section>
-
-<section class="container" id="cart-bottom">
-    <div class="row">
-        <div class="coupon col-lg-6 col-md-6 col-12 mb-4">
-            <div>
-                <h5>COUPON</h5>
-                <p>Enter your coupon if you have one.</p>
-                <input type="text" name="" id="" placeholder="Coupon Code">
-                <button type="submit" class="button">APPLY COUPON &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+    {% if 'cart_item' in session %}
+    <section id="empty" class="container">
+        <button type="submit" class="button" id="button">EMPTY CART &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/empty"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+    </section>
+    
+    <section id="cart-container" class="container my-5">
+        <table width="100%" id="myTable">
+            <thead>
+                <tr>
+                    <td>Delete</td>
+                    <td>Image</td>
+                    <td>Product</td>
+                    <td>Price (₦)</td>
+                    <td>Quantity</td>
+                    <td>Total (₦)</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, val in session['cart_item'].items() %}
+                {% set quantity = session['cart_item'][key]['quantity'] %}
+                {% set price = session['cart_item'][key]['price'] %}
+                {% set total_price = session['cart_item'][key]['total_price'] %}
+                <tr>
+                    <td><a href="{{ url_for('.delete_product',code=session['cart_item'][key]['code'])}}"><i class="fa-solid fa-trash"></i></a></td>
+                    <td><img src="/static/img/products/{{ session['cart_item'][key]['image'] }}" alt=""></td>
+                    <td>{{ session['cart_item'][key]['name'] }}</td>
+                    <td id="price">{{ price }}</td>
+                    <td>{{ quantity }}</td>
+                    <td>{{ total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    
+    <section class="container" id="cart-bottom">
+        <div class="row">
+            <div class="coupon col-lg-6 col-md-6 col-12 mb-4">
+                <div>
+                    <h5>COUPON</h5>
+                    <p>Enter your coupon if you have one.</p>
+                    <input type="text" name="" id="" placeholder="Coupon Code">
+                    <button type="submit" class="button">APPLY COUPON &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+                </div>
+            </div>
+            <div class="total col-lg-6 col-md-6 col-12">
+                <div>
+                    <h5>CART TOTAL</h5>
+                    <div class="d-flex justify-content-between"> 
+                        <h6>Subtotal</h6>
+                        <p id="subtotal-none"></p>
+                        <p id="subtotal"></p>
+                    </div>
+                    <div class="d-flex justify-content-between"> 
+                        <h6>Shipping</h6>
+                        <p id="shipping-none">0</p>
+                        <p id="shipping"></p>
+                    </div>
+                    <hr class="second-hr">
+                    <div class="d-flex justify-content-between"> 
+                        <h6>Total</h6>
+                        <p id="total"></p>
+                    </div>
+    
+                    <button type="submit" class="button">CHECKOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+                </div>
             </div>
         </div>
-        <div class="total col-lg-6 col-md-6 col-12">
-            <div>
-                <h5>CART TOTAL</h5>
-                <div class="d-flex justify-content-between"> 
-                    <h6>Subtotal</h6>
-                    <p id="subtotal-none"></p>
-                    <p id="subtotal"></p>
-                </div>
-                <div class="d-flex justify-content-between"> 
-                    <h6>Shipping</h6>
-                    <p id="shipping-none">0</p>
-                    <p id="shipping"></p>
-                </div>
-                <hr class="second-hr">
-                <div class="d-flex justify-content-between"> 
-                    <h6>Total</h6>
-                    <p id="total"></p>
-                </div>
-
-                <button type="submit" class="button">CHECKOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
-            </div>
-        </div>
-    </div>
-</section>
-{% else: %}
-    <div class="class"><h3 style="text-align:center;">Cart is empty</h3></div>
-{% endif %}
+    </section>
+    {% else: %}
+        <div class="class"><h3 style="text-align:center;">Cart is empty</h3></div>
+    {% endif %}
 </section>
 
     <script>
