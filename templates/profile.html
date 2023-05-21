@@ -6,10 +6,12 @@ Welcome to Profile Page
 
 {% if 'loggedin' in session %}
 <a href="/logout">Logout</a>
+<h1>Username : {{ session['username'] }}</h1>
 {% endif %}
 
 {% if 'loggedin' not in session %}
 <a href="/login">Login</a>
+<h1>Username: No user is logged in</h1>
 {% endif %}
 
 {% endblock %}

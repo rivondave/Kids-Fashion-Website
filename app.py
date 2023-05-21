@@ -2,7 +2,9 @@ from flask import Flask, request, url_for, redirect, session, render_template
 from flaskext.mysql import MySQL
 import pymysql
 import re
+from datetime import datetime
 
+now = datetime.now()
 
 app = Flask(__name__,template_folder = "templates")
 app.secret_key = 'anything'
@@ -18,68 +20,142 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor(pymysql.cursors.DictCursor)
 
+def get_total_quantity():
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
+    rows = cursor.fetchall()
+    count = 0
+    total_quantity = 0
+    while count < len(rows):
+        quantity = rows[count]['QUANTITY']
+        total_quantity += quantity
+        count+=1
+    return total_quantity
+
+def get_total_price():
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
+    rows = cursor.fetchall()
+    count = 0
+    total_price = 0
+    while count < len(rows):
+        price = rows[count]['TOTAL_PRICE']
+        total_price += price
+        count+=1
+    return total_price
+
 @app.route('/')
 def index():
     # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT * FROM products WHERE TREND = 'trend'")
     rows = cursor.fetchall()
-    return render_template('index.html',trend = rows)
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('index.html',trend = rows,total=total)
 
 @app.route('/product/<string:product>')
 def single_product(product):
     cursor.execute("SELECT * FROM products WHERE NAME = %s",(product))
     rows = cursor.fetchone()
-    return render_template('product.html',product=rows)
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('product.html',product=rows,total=total)
 
 @app.route('/bottom')
 def bottom():
     cursor.execute("SELECT * FROM products WHERE CATEGORY = 'bottom'")
     rows = cursor.fetchall()
-    return render_template('bottom.html',bottom = rows)
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('bottom.html',bottom = rows, total=total)
 
 @app.route('/top')
 def top():
     cursor.execute("SELECT * FROM products WHERE CATEGORY = 'top'")
     rows = cursor.fetchall()
-    return render_template('top.html', top=rows)
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('top.html', top=rows, total=total)
 
 @app.route('/underwears')
 def underwears():
     cursor.execute("SELECT * FROM products WHERE CATEGORY = 'underwears'")
     rows = cursor.fetchall()
-    return render_template('underwears.html', underwears = rows)
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('underwears.html', underwears = rows, total=total)
 
 @app.route('/brands')
 def brands():
-    return render_template('brands.html')
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('brands.html', total=total)
 
 @app.route('/explore')
 def explore():
-    return render_template('explore.html')
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('explore.html', total=total)
 
 # ICONS LINK
-
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('profile.html',total=total)
+
+
 
 @app.route('/cart')
 def cart():
-    return render_template('cart.html')
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
+    rows = cursor.fetchall()
+    if 'loggedin' in session:
+        total = get_total_quantity()
+        total_price = get_total_price()
+    else:
+        total = 0
+        total_price = 0
+    return render_template('cart.html',product=rows,total=total,total_price=total_price)
 
-@app.route('/checkout')
+@app.route('/proceed')
+def proceed():
+    if 'loggedin' in session:
+        total = get_total_quantity()
+    else:
+        total = 0
+    return render_template('proceed.html',total=total)
+
+@app.route('/checkout',methods=['GET','POST'])
 def checkout():
+    if request.method=='POST':
+        username = session['username']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        total_price = request.form['total_price']
+        name = request.form['name']
+        cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s)",(username, int(price), int(quantity), int(total_price), name))
+        # session.pop('cart_item')
+        print(session)
+        conn.commit()
     return render_template('checkout.html')
-
-#FUNCTIONS
-def array_merge( first_array, second_array):
-    if isinstance( first_array , list) and isinstance( second_array, list):
-        return first_array + second_array
-    elif isinstance( first_array, dict) and isinstance( second_array, dict):
-        return dict (list(first_array.items() ) + list ( second_array.items() ))
-    elif isinstance( first_array, set) and isinstance(second_array, set):
-        return first_array.union(second_array)
-    return False
 
 # LOGIN, LOGOUT, REGISTER AND CHANGE_PASSWORD
 @app.route('/login', methods = ['GET','POST'])
@@ -133,8 +209,7 @@ def register():
 def logout():
     session.pop('loggedin', None)
     session.pop('email', None)
-    session.pop('username', None)
-    session.permanent = False
+    # session.permanent = False
     return redirect(url_for('.index'))
 
 @app.route('/change_password', methods=['GET','POST'])
@@ -166,92 +241,79 @@ def change_password():
         msg = "Fill in form details"
     return render_template('change_password.html',msg=msg)
 
-#EMPTY CART
-@app.route('/empty')
-def empty_cart():
-    try:
-        session.pop('cart_item')
-        return redirect(url_for('.cart'))
-    except Exception as e:
-        print(e)
+@app.route('/increase/<string:code>')
+def increase_quantity(code):
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
+    user = cursor.fetchone()
+    if user:
+        quantity = user['QUANTITY']
+        price = user['PRICE']
+        total_price = user['TOTAL_PRICE']
+        quantity = quantity  + 1
+        total_price = int(quantity) * int(price)
+        cursor.execute("UPDATE cart SET QUANTITY = %s, TOTAL_PRICE = %s WHERE USERNAME = %s AND CODE = %s",(quantity,total_price,username,code))
+        conn.commit()
+    return redirect(url_for('.cart'))
 
-#REMOVE PRODUCT
-@app.route('/delete/<string:code>')
-def delete_product(code):
-    try:
-        all_total_price = 0
-        all_total_quantity = 0
-        session.modified = True
+@app.route('/decrease/<string:code>')
+def decrease_quantity(code):
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
+    user = cursor.fetchone()
+    if user:
+        quantity = user['QUANTITY']
+        if quantity > 1:
+            price = user['PRICE']
+            total_price = user['TOTAL_PRICE']
+            quantity = quantity - 1
+            total_price = int(quantity) * int(price)
+            cursor.execute("UPDATE cart SET QUANTITY = %s, TOTAL_PRICE = %s WHERE USERNAME = %s AND CODE = %s",(quantity,total_price,username,code))
+            conn.commit()
 
-        for item in session['cart_item'].items():
-            if item[0] == code:
-                session['cart_item'].pop(item[0], None)
-                if 'cart_item' in session:
-                    for key, value in session['cart_item'].items():
-                        individual_quantity = int(session['cart_item'][key]['quantity'])
-                        individual_price = float(session['cart_item'][key]['total_price'])
-                        all_total_quantity = all_total_quantity + individual_quantity
-                        all_total_price = all_total_price + individual_price
-                break
-        if all_total_quantity == 0:
-            session.pop('cart_item')
-        else:
-            session['all_total_quantity'] = all_total_quantity
-            session['all_total_price'] = all_total_price
-
-        return redirect(url_for('.cart'))
-    except Exception as e:
-        print(e)
+            
+    return redirect(url_for('.cart'))
 
 
-
-# CART
-@app.route('/add', methods=['POST'])
+#CART FUNCTIONALITIES WITHOUT SESSION
+@app.route('/add', methods=['GET','POST'])
 def add():
-    _quantity = int (request.form['quantity'])
-    _code = request.form['code']
-    #validate the received values
-    if _quantity and _code and request.method == 'POST':
+    if request.method == 'POST':
+        if 'name' in request.form and 'price' in request.form and 'code' in request.form and 'image' in request.form and 'quantity' in request.form:
+            name = request.form['name']
+            price = request.form['price']
+            code = request.form['code']
+            image  = request.form['image']
+            quantity = request.form['quantity']
+            username = session['username']
+            total = int(price)*int(quantity)
 
-        cursor.execute("SELECT * FROM products WHERE CODE=%s", (_code,))
-        row = cursor.fetchone()
-        
-        itemArray = { row['CODE'] : {'name' : row['NAME'], 'code' : row['CODE'], 'quantity' :_quantity, 'price' : row['PRICE'], 'image' : row['IMAGE'], 'total_price': _quantity * row['PRICE'] }}
+            cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
+            user_cart = cursor.fetchone()        
+            if user_cart:
+                old_quantity = user_cart['QUANTITY']
+                new_quantity = int(quantity) + int(old_quantity)
+                new_total = int(price) * new_quantity
+                cursor.execute("UPDATE cart SET TOTAL_PRICE = %s, QUANTITY=%s WHERE USERNAME = %s AND CODE = %s",(new_total,new_quantity,username,code))
+                conn.commit()
+            else:
+                cursor.execute("INSERT INTO cart VALUES(%s,%s,%s,%s,%s,%s,%s)",(name,price,code,image,int(quantity),username,total))
+                conn.commit()
+        return redirect(url_for('.single_product',product=name))
 
-        all_total_price =0
-        all_total_quantity = 0
+@app.route('/delete/<string:code>')
+def delete(code):
+    username = session['username']
+    cursor.execute("DELETE FROM cart WHERE CODE = %s AND USERNAME = %s",(code,username))
+    conn.commit()
+    return redirect(url_for('.cart'))
 
-        session.modified = True
-        if 'cart_item' in session:
-
-            if row['CODE'] in session['cart_item']:
-                for key,value in session['cart_item'].items():
-                    if row['CODE'] == key:
-                        old_quantity = session['cart_item'][key]['quantity']
-                        total_quantity = old_quantity + _quantity
-                        session['cart_item'][key]['quantity'] = total_quantity
-                        session['cart_item'][key]['total_price'] = int(total_quantity * row['PRICE'])
-            else:   
-                session['cart_item'] = array_merge(session['cart_item'], itemArray)
-
-            for key, value in session['cart_item'].items():
-                individual_quantity = int(session['cart_item'][key]['quantity'])
-                individual_price = float(session['cart_item'][key]['total_price'])
-                all_total_quantity = all_total_quantity + individual_quantity
-                all_total_price = all_total_price + individual_price
-
-        else:
-            session['cart_item'] = itemArray
-            all_total_quantity = all_total_quantity+ _quantity
-            all_total_price = all_total_price + _quantity * row['PRICE']
-
-        session['all_total_quantity'] = all_total_quantity
-        session['all_total_price'] = all_total_price
-
-        return redirect(url_for('.single_product',product=row['NAME']))
-    else:
-        return 'Error while adding item to cart'
-
+@app.route('/empty')
+def empty():
+    username = session['username']
+    cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
+    conn.commit()
+    return redirect(url_for('.cart'))
 
 if __name__ == '__main__':
     app.run(debug=True)
