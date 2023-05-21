@@ -2,7 +2,13 @@
 {% block title%}Kids Fashion Website | Cart {% endblock %}
 {% block content%}
 
-{% if 'cart_item' in session %}
+
+
+{% if 'loggedin' in session %}
+{% if total == 0 %}
+<img src="/static/img/global/empty-cart.gif" alt="" srcset="">
+{% endif %}
+{% if total > 0 %}
 <section id="empty" class="container">
     <button type="submit" class="button" id="button">EMPTY CART &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/empty"><i class="fa-solid fa-arrow-right-long"></i></a></button>
 </section>
@@ -20,18 +26,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for key, val in session['cart_item'].items() %}
-            {% set quantity = session['cart_item'][key]['quantity'] %}
-            {% set price = session['cart_item'][key]['price'] %}
-            {% set total_price = session['cart_item'][key]['total_price'] %}
+            {% for item in product %}
             <tr>
-                <td><a href="{{ url_for('.delete_product',code=session['cart_item'][key]['code'])}}"><i class="fa-solid fa-trash"></i></a></td>
-                <td><img src="/static/img/products/{{ session['cart_item'][key]['image'] }}" alt=""></td>
-                <td>{{ session['cart_item'][key]['name'] }}</td>
-                <td id="price">{{ price }}</td>
-                <!-- <td><input value="{{ quantity }}" type="number" id="num"></td> -->
-                <td>{{ quantity }}</td>
-                <td>{{ total_price }}</td>
+                <td><a href="{{ url_for('.delete',code=item.CODE) }}"><i class="fa-solid fa-trash"></i></a></td>
+                <td><a href="{{ url_for('.single_product', product=item.NAME)}}"><img src="/static/img/products/{{ item.IMAGE }}" alt=""></a></td>
+                <td><a href="{{ url_for('.single_product', product=item.NAME)}}">{{ item.NAME }}</a></td>
+                <td id="price">{{ item.PRICE }}</td>
+                <td><a href="{{ url_for('.increase_quantity',code=item.CODE) }}"><i class="bi bi-plus-square"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ item.QUANTITY }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ url_for('.decrease_quantity',code=item.CODE) }}"><i class="bi bi-file-minus"></i></a></td>
+                <td>{{ item.TOTAL_PRICE }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -53,26 +55,25 @@
                 <h5>CART TOTAL</h5>
                 <div class="d-flex justify-content-between"> 
                     <h6>Subtotal</h6>
-                    <p id="subtotal-none"></p>
-                    <p id="subtotal"></p>
+                    <p>₦{{ total_price }}</p>
                 </div>
                 <div class="d-flex justify-content-between"> 
                     <h6>Shipping</h6>
-                    <p id="shipping-none">0</p>
-                    <p id="shipping"></p>
+                    <p>₦{{ session['shipping'] }}</p>
                 </div>
                 <hr class="second-hr">
                 <div class="d-flex justify-content-between"> 
                     <h6>Total</h6>
-                    <p id="total"></p>
+                    <p>₦{{ session['total'] }}</p>
                 </div>
 
-                <button type="submit" class="button">CHECKOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+                <button type="submit" class="button">PROCEED &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/proceed"><i class="fa-solid fa-arrow-right-long"></i></a></button>
             </div>
         </div>
     </div>
 </section>
-{% else: %}
-    <img src="/static/img/global/empty-cart.gif" alt="" style="width:100%;">
+{% endif %}
+{% else %}
+<img src="/static/img/global/empty-cart.gif" alt="" srcset="">
 {% endif %}
 {% endblock %}

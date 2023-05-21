@@ -5,6 +5,9 @@
 {% if 'loggedin' in session %}
 <form action="/add" method="post">
 <h3>{{ product.NAME }}</h3>
+<input type="hidden" name="name" value="{{ product.NAME }}">
+<input type="hidden" name="price" value="{{ product.PRICE }}">
+<input type="hidden" name="image" value="{{ product.IMAGE }}">
 <input type="number" class="product-quantity" name="quantity" value="1" size="2"/>
 ₦{{ product.PRICE }}
 <br>
