@@ -30,16 +30,19 @@ Installation & Setup Dependencies
 
     $pip3 install PyMySQL
 ```       
-        
-4. Create a database/schema called 'kidsfashion' in your MySQL server, e.g XAMPP, SQL SERVER, MySQL Workbench e.t.c
+4. You can simply run 
+```
+    npm install
+```
+5. Create a database/schema called 'kidsfashion' in your MySQL server, e.g XAMPP, SQL SERVER, MySQL Workbench e.t.c
 
-5. Open the sql.txt file and run the queries in your MySQL to create tables and insert values
+6. Open the sql.txt file and run the queries in your MySQL to create tables and insert values
 
-6. Open app.py file and edit MySQL Database Configurations to your own values
+7. Open app.py file and edit MySQL Database Configurations to your own values
 
 ![Screen Shot 2023-03-06 at 4 23 23 AM](https://user-images.githubusercontent.com/74568105/223012510-79fc2994-880f-4de0-979f-f56955d53a17.png)
 
-7. Now run the app.py file
+8. Now run the app.py file
 
 ![ezgif-1-329ef6e1ec](https://user-images.githubusercontent.com/74568105/223013824-aebb5545-95b7-4f41-9ae8-c1e5fda1bffb.gif)
 
