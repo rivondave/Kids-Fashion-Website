@@ -47,6 +47,8 @@ while count <= length:
     print(new_dict_list[count])
     count=count+1
 
+def decrypt(char):
+    pass
 
 def encrypt(char):
     length = len(char)
