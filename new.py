@@ -39,10 +39,24 @@ a = {
 }
 value = a['cart_item']
 
-new_dict = {'one':{'second':'first', 'third':'second', 'fourth':'third'}, 'two':'second', 'three':'third'}
-new_dict_list = list(new_dict.keys())
-length = len(new_dict_list)-1
-count = 0
-while count <= length:
-    print(new_dict_list[count])
-    count=count+1
+# new_dict = {'one':{'second':'first', 'third':'second', 'fourth':'third'}, 'two':'second', 'three':'third'}
+# new_dict_list = list(new_dict.keys())
+# length = len(new_dict_list)-1
+# count = 0
+# while count <= length:
+#     print(new_dict_list[count])
+#     count=count+1
+
+
+def encrypt(char):
+    length = len(char)
+    list = []
+    for i in char:
+        value = ord(i)
+        value = value/length
+        list.append(value)
+    list = str(list)
+    return list
+
+print(encrypt('dave3#'))
+# print(ord('i'))

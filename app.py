@@ -20,6 +20,10 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor(pymysql.cursors.DictCursor)
 
+def encrypt(char):
+    length = len(char)
+    
+
 def get_total_quantity():
     username = session['username']
     cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
