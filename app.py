@@ -2,9 +2,18 @@ from flask import Flask, request, url_for, redirect, session, render_template
 from flaskext.mysql import MySQL
 import pymysql
 import re
-from datetime import datetime
+import datetime
 
-now = datetime.now()
+
+def get_time():
+    now = datetime.datetime.now()
+    time = now.strftime("%H:%M:%S")
+    return time
+
+def get_date():
+    now = datetime.datetime.now()
+    date = now.strftime("%d-%m-%y")
+    return date
 
 app = Flask(__name__,template_folder = "templates")
 app.secret_key = 'anything'
@@ -22,7 +31,7 @@ cursor = conn.cursor(pymysql.cursors.DictCursor)
 
 def encrypt(char):
     length = len(char)
-    
+
 
 def get_total_quantity():
     username = session['username']
@@ -139,27 +148,57 @@ def cart():
         total_price = 0
     return render_template('cart.html',product=rows,total=total,total_price=total_price)
 
+@app.route('/checkout', methods=['GET','POST'])
+def checkout():
+    if request.method == 'POST':
+        if 'name' in request.form and 'price' in request.form and 'code' in request.form and 'image' in request.form and 'quantity' in request.form:
+            name = request.form['name']
+            price = request.form['price']
+            code = request.form['code']
+            image  = request.form['image']
+            quantity = request.form['quantity']
+            username = session['username']
+            total = int(price)*int(quantity)
+            result = request.form['name']
+            print(result)
+            cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
+            user_cart = cursor.fetchone()        
+            if user_cart:
+                cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name,code,int(quantity),price,total,get_time(),get_date(),image))
+                cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
+                conn.commit()
+
+            else:
+                cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name,code,int(quantity),price,total,get_time(),get_date(),image))
+                cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
+                conn.commit()
+    return render_template('checkout.html')
+
 @app.route('/proceed')
 def proceed():
+    username = session['username']
+    cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
+    rows = cursor.fetchall()
+    if 'loggedin' in session:
+        total = get_total_quantity()
+        total_price = get_total_price()
+    else:
+        total = 0
+        total_price = 0
+    return render_template('proceed.html',product=rows,total=total,total_price=total_price)
+
+@app.route('/profile/history')
+def history():
+    username = session['username']
+    cursor.execute("SELECT * FROM history WHERE USERNAME = %s",(username))
+    rows = cursor.fetchall()
     if 'loggedin' in session:
         total = get_total_quantity()
     else:
         total = 0
-    return render_template('proceed.html',total=total)
+    return render_template('history.html',product=rows,total=total)
 
-@app.route('/checkout',methods=['GET','POST'])
-def checkout():
-    if request.method=='POST':
-        username = session['username']
-        price = request.form['price']
-        quantity = request.form['quantity']
-        total_price = request.form['total_price']
-        name = request.form['name']
-        cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s)",(username, int(price), int(quantity), int(total_price), name))
-        # session.pop('cart_item')
-        print(session)
-        conn.commit()
-    return render_template('checkout.html')
+
 
 # LOGIN, LOGOUT, REGISTER AND CHANGE_PASSWORD
 @app.route('/login', methods = ['GET','POST'])
@@ -282,6 +321,7 @@ def decrease_quantity(code):
 #CART FUNCTIONALITIES WITHOUT SESSION
 @app.route('/add', methods=['GET','POST'])
 def add():
+    
     if request.method == 'POST':
         if 'name' in request.form and 'price' in request.form and 'code' in request.form and 'image' in request.form and 'quantity' in request.form:
             name = request.form['name']
@@ -291,6 +331,7 @@ def add():
             quantity = request.form['quantity']
             username = session['username']
             total = int(price)*int(quantity)
+            
 
             cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
             user_cart = cursor.fetchone()        

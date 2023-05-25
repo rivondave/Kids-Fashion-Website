@@ -1,39 +1,38 @@
 {% extends 'base.html' %}
-{% block title%}Kids Fashion Website | Cart {% endblock %}
+{% block title%}Kids Fashion Website | Proceed {% endblock %}
 {% block content%}
 
-{% if 'cart_item' in session %}
 
-<form action="/checkout" method="post">
+
+{% if 'loggedin' in session %}
+{% if total == 0 %}
+<img src="/static/img/global/empty-cart.gif" alt="" srcset="">
+{% endif %}
+{% if total > 0 %}
+<section id="empty" class="container">
+    <button type="submit" class="button" id="button"><a href="/cart"><i class="bi bi-arrow-left"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BACK TO CART</button>
+</section>
+
 <section id="cart-container" class="container my-5">
     <table width="100%" id="myTable">
         <thead>
             <tr>
-                <td>Delete</td>
                 <td>Image</td>
-                <td>Product</td>
                 <td>Price (₦)</td>
+                <td>Product</td>
                 <td>Quantity</td>
                 <td>Total (₦)</td>
             </tr>
         </thead>
         <tbody>
-            {% for key, val in session['cart_item'].items() %}
-            {% set quantity = session['cart_item'][key]['quantity'] %}
-            {% set price = session['cart_item'][key]['price'] %}
-            {% set total_price = session['cart_item'][key]['total_price'] %}
+            {% for item in product %}
             <tr>
-                <td><a href="{{ url_for('.delete_product',code=session['cart_item'][key]['code'])}}"><i class="fa-solid fa-trash"></i></a></td>
-                <td><img src="/static/img/products/{{ session['cart_item'][key]['image'] }}" alt=""></td>
-                <td>{{ session['cart_item'][key]['name'] }}</td>
-                <td id="price">{{ price }}</td>
-                <td>{{ quantity }}</td>
-                <td> {{ total_price }}</td>
+                <td><a href="{{ url_for('.single_product', product=item.NAME)}}"><img src="/static/img/products/{{ item.IMAGE }}" alt=""></a></td>
+                <td id="price">{{ item.PRICE }}</td>
+                <td><a href="{{ url_for('.single_product', product=item.NAME)}}">{{ item.NAME }}</a></td>
+                <td>{{ item.QUANTITY }}</td>
+                <td>{{ item.TOTAL_PRICE }}</td>
             </tr>
-            <input type="text" name="name" id="" value="{{ session['cart_item'][key]['name'] }}">
-            <input type="text" name="price" id="" value="{{ price }}">
-            <input type="text" name="quantity" id="" value="{{ quantity }}">
-            <input type="text" name="total_price" id="" value="{{ total_price }}">
             {% endfor %}
         </tbody>
     </table>
@@ -41,33 +40,48 @@
 
 <section class="container" id="cart-bottom">
     <div class="row">
-        
+        <div class="coupon col-lg-6 col-md-6 col-12 mb-4">
+            <div>
+                <h5>COUPON</h5>
+                <p>Enter your coupon if you have one.</p>
+                <input type="text" name="" id="" placeholder="Coupon Code">
+                <button type="submit" class="button">APPLY COUPON &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""><i class="fa-solid fa-arrow-right-long"></i></a></button>
+            </div>
+        </div>
         <div class="total col-lg-6 col-md-6 col-12">
             <div>
                 <h5>CART TOTAL</h5>
                 <div class="d-flex justify-content-between"> 
                     <h6>Subtotal</h6>
-                    <p id="subtotal-none"></p>
-                    <p id="subtotal"></p>
+                    <p>₦{{ total_price }}</p>
                 </div>
                 <div class="d-flex justify-content-between"> 
                     <h6>Shipping</h6>
-                    <p id="shipping-none">0</p>
-                    <p id="shipping"></p>
+                    <p>₦{{ session['shipping'] }}</p>
                 </div>
                 <hr class="second-hr">
                 <div class="d-flex justify-content-between"> 
                     <h6>Total</h6>
-                    <p id="total"></p>
+                    <p>₦{{ session['total'] }}</p>
                 </div>
-
-                <button type="submit" class="button">CHECKOUT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/checkout"><i class="fa-solid fa-arrow-right-long"></i></a></button>
+                
+                <form action="/checkout" method="post">
+                    {% for item in product %}
+                    Image: <input type="text" name="image" value="{{ item.IMAGE }}">
+                    Price: <input type="text" name="price" value="{{ item.PRICE }}">
+                    Name: <input type="text" name="name" value="{{ item.NAME }}">
+                    Quantity: <input type="text" name="quantity" value="{{ item.QUANTITY }}">
+                    Code: <input type="text" name="code" value="{{ item.CODE }}">
+                    <br>
+                    {% endfor %}
+                    <input type="submit" class="button" value="CHECKOUT">
+                </form>
             </div>
         </div>
     </div>
 </section>
-</form>
-{% else: %}
-    <img src="/static/img/global/empty-cart.gif" alt="" style="width:100%;">
+{% endif %}
+{% else %}
+<img src="/static/img/global/empty-cart.gif" alt="" srcset="">
 {% endif %}
 {% endblock %}
