@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if 'loggedin' in session %}
+
+<table width="100%">
+    <thead>
+        <tr>
+        <!-- <th>Code</th> -->
+        <th>Product</th>
+        <th>Time</th>
+        <th>Date</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+    </tr>
+    </thead>
+    {% for item in product %}
+    <tbody>
+        <!-- <td>{{ item.CODE }}</td> -->
+        <td>{{ item.PRODUCT }}</td>
+        <td>{{ item.TIME }}</td>
+        <td>{{ item.DATE }}</td>
+        <td>{{ item.PRICE }}</td>
+        <td>{{ item.QUANTITY }}</td>
+        <td>{{ item.TOTAL_PRICE }}</td>
+    </tbody>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if 'loggedin' not in session %}
+<h1>No history for guest user</h1>
+{% endif %}
+
+
+{% endblock %}
