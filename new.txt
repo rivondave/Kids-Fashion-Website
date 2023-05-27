@@ -76,3 +76,6 @@ CART INFO
     <div class="class"><h3 style="text-align:center;">Cart is empty</h3></div>
 {% endif %}
 </section>
+
+
+Add encrypt password to database and decrypt password 
