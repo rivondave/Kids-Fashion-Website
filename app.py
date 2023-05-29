@@ -51,10 +51,6 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-def encrypt(char):
-    length = len(char)
-
-
 def get_total_quantity():
     username = session['username']
     cursor.execute("SELECT * FROM cart WHERE username = %s",(username))
@@ -229,7 +225,7 @@ def login():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        enc_password = encrypt(password)
+        enc_password = str(encrypt(password))        
         cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s AND PASSWORD = %s",(username,enc_password))
         accounts = cursor.fetchone()
         if accounts:
@@ -253,8 +249,9 @@ def register():
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
-            enc_password = encrypt(password)
-            cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s OR PASSWORD = %s",(username,enc_password))
+            enc_password = str(encrypt(password))
+            print(enc_password)
+            cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s",(username))
             accounts = cursor.fetchone()
             if accounts:
                 msg = "User already exists!"
