@@ -47,20 +47,6 @@
 #     print(new_dict_list[count])
 #     count=count+1
 
-# def decrypt(char):
-#     pass
-
-# def encrypt(char):
-#     length = len(char)
-#     list = []
-#     for i in char:
-#         value = ord(i)
-#         value = value/length
-#         list.append(value)
-#     list = str(list)
-#     return list
-
-# print(encrypt('dave3#'))
 # # print(ord('i'))
 
 # from datetime import datetime
@@ -68,37 +54,52 @@
 # now = datetime.now()
 # print(now.strftime("%H:%M:%S,%d-%m-%y"))
 
-a = (
-    [
-        ('image', 'adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training.webp'), 
-        ('image', 'Nike Dri-FIT Multi+.webp'), 
-        ('price', '22000'), 
-        ('price', '15000'), 
-        ('name', 'adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training'), 
-        ('name', 'Nike Dri-FIT Multi+'), 
-        ('quantity', '1'), 
-        ('quantity', '1'), 
-        ('code', 'bottom002'), 
-        ('code', 'bottom006')
-        ]
-        )
+# a = (
+#     [
+#         ('image', 'adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training.webp'), 
+#         ('image', 'Nike Dri-FIT Multi+.webp'), 
+#         ('price', '22000'), 
+#         ('price', '15000'), 
+#         ('name', 'adidas Designed 2 Move 3-Stripes Primeblue ShortsMens Training'), 
+#         ('name', 'Nike Dri-FIT Multi+'), 
+#         ('quantity', '1'), 
+#         ('quantity', '1'), 
+#         ('code', 'bottom002'), 
+#         ('code', 'bottom006')
+#         ]
+#         )
 
-print(type(a))
+# print(type(a))
 
 
-[('image', 'Go Jetters Boys 3 Pack Pant.jpg'), 
- ('image', 'Ozlem Children Singlets For Girls- 6in1 White.jpg'), 
- ('image', 'Big Kids Boys Graphic Training Top.webp'), 
- ('price', '4000'), 
- ('price', '4000'), 
- ('price', '10000'), 
- ('name', 'Go Jetters Boys 3 Pack Pant'), 
- ('name', 'Ozlem Children Singlets For Girls- 6in1 White'), 
- ('name', 'Big Kids Boys Graphic Training Top'), 
- ('quantity', '2'), 
- ('quantity', '1'), 
- ('quantity', '1'), 
- ('code', 'und005'), 
- ('code', 'und012'), 
- ('code', 'top001')
-]
+# [('image', 'Go Jetters Boys 3 Pack Pant.jpg'), 
+#  ('image', 'Ozlem Children Singlets For Girls- 6in1 White.jpg'), 
+#  ('image', 'Big Kids Boys Graphic Training Top.webp'), 
+#  ('price', '4000'), 
+#  ('price', '4000'), 
+#  ('price', '10000'), 
+#  ('name', 'Go Jetters Boys 3 Pack Pant'), 
+#  ('name', 'Ozlem Children Singlets For Girls- 6in1 White'), 
+#  ('name', 'Big Kids Boys Graphic Training Top'), 
+#  ('quantity', '2'), 
+#  ('quantity', '1'), 
+#  ('quantity', '1'), 
+#  ('code', 'und005'), 
+#  ('code', 'und012'), 
+#  ('code', 'top001')
+# ]
+
+def decrypt(char):
+    pass
+
+def encrypt(char):
+    length = len(char)
+    list = []
+    for i in char:
+        value = ord(i)
+        value = value/length
+        list.append(value)
+    list = str(list)
+    return list
+
+print(encrypt('dave3#'))
