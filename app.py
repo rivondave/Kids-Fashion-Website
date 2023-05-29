@@ -15,6 +15,28 @@ def get_date():
     date = now.strftime("%d-%m-%y")
     return date
 
+def decrypt(list):
+    length = len(list)
+    new_list = []
+    result = []
+    for i in list:
+        value = i*length
+        new_list.append(value)
+    for i in new_list:
+        new = chr(int(i))
+        result.append(new)
+    return result
+
+def encrypt(char):
+    length = len(char)
+    list = []
+    for i in char:
+        value = ord(i)
+        value = value/length
+        list.append(value)
+    return list
+
+
 app = Flask(__name__,template_folder = "templates")
 app.secret_key = 'anything'
 
@@ -207,7 +229,8 @@ def login():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s AND PASSWORD = %s",(username,password))
+        enc_password = encrypt(password)
+        cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s AND PASSWORD = %s",(username,enc_password))
         accounts = cursor.fetchone()
         if accounts:
             session['loggedin'] = True
@@ -230,12 +253,13 @@ def register():
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
-            cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s OR PASSWORD = %s",(username,password))
+            enc_password = encrypt(password)
+            cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s OR PASSWORD = %s",(username,enc_password))
             accounts = cursor.fetchone()
             if accounts:
                 msg = "User already exists!"
             else:
-                cursor.execute("INSERT INTO accounts VALUES (NULL, %s, %s, %s)",(username,email,password))
+                cursor.execute("INSERT INTO accounts VALUES (NULL, %s, %s, %s)",(username,email,enc_password))
                 conn.commit()
                 msg = 'Account created successfully'
             return render_template('register.html',msg=msg)
@@ -268,7 +292,7 @@ def change_password():
             accounts = cursor.fetchone()
             if accounts:
                 if new_password == confirm_password:
-                    cursor.execute("UPDATE accounts SET PASSWORD = %s WHERE USERNAME = %s",(new_password, username))
+                    cursor.execute("UPDATE accounts SET PASSWORD = %s WHERE USERNAME = %s",(encrypt(new_password), username))
                     conn.commit()
                     msg = 'Password updated successfully'
                 else:
