@@ -89,17 +89,25 @@
 #  ('code', 'top001')
 # ]
 
-def decrypt(char):
-    pass
+# def decrypt(list):
+#     length = len(list)
+#     new_list = []
+#     result = []
+#     for i in list:
+#         value = i*length
+#         new_list.append(value)
+#     for i in new_list:
+#         new = chr(int(i))
+#         result.append(new)
+#     return result
 
-def encrypt(char):
-    length = len(char)
-    list = []
-    for i in char:
-        value = ord(i)
-        value = value/length
-        list.append(value)
-    list = str(list)
-    return list
+# def encrypt(char):
+#     length = len(char)
+#     list = []
+#     for i in char:
+#         value = ord(i)
+#         value = value/length
+#         list.append(value)
+#     return list
 
-print(encrypt('dave3#'))
+
