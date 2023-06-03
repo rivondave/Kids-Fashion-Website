@@ -3,7 +3,6 @@
 {% block content%}
 
 
-
 {% if 'loggedin' in session %}
 {% if total == 0 %}
 <img src="/static/img/global/empty-cart.gif" alt="" srcset="">
@@ -67,11 +66,11 @@
                 
                 <form action="/checkout" method="post">
                     {% for item in product %}
-                    Image: <input type="text" name="image" value="{{ item.IMAGE }}">
-                    Price: <input type="text" name="price" value="{{ item.PRICE }}">
-                    Name: <input type="text" name="name" value="{{ item.NAME }}">
-                    Quantity: <input type="text" name="quantity" value="{{ item.QUANTITY }}">
-                    Code: <input type="text" name="code" value="{{ item.CODE }}">
+                    <input type="hidden" name="image" value="{{ item.IMAGE }}">
+                    <input type="hidden" name="price" value="{{ item.PRICE }}">
+                    <input type="hidden" name="name" value="{{ item.NAME }}">
+                    <input type="hidden" name="quantity" value="{{ item.QUANTITY }}">
+                    <input type="hidden" name="code" value="{{ item.CODE }}">
                     <br>
                     {% endfor %}
                     <input type="submit" class="button" value="CHECKOUT">
