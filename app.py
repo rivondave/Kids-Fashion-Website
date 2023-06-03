@@ -1,8 +1,9 @@
 from flask import Flask, request, url_for, redirect, session, render_template
 from flaskext.mysql import MySQL
+from datetime import datetime
 import pymysql
 import re
-from datetime import datetime
+
 
 
 def get_time():
@@ -247,7 +248,7 @@ def login():
 
 @app.route('/register', methods = ['GET','POST'])
 def register():
-    msg=" "
+    msg=''
     if request.method == 'POST':
         if 'username' in request.form and 'password' in request.form and 'email' in request.form:
             username = request.form['username']
@@ -258,7 +259,15 @@ def register():
             cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s",(username))
             accounts = cursor.fetchone()
             if accounts:
-                msg = "User already exists!"
+                msg = 'Account already exists!'
+            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only characters and numbers!'
+            elif len(password) < 8:
+                msg = 'Password cannot be less than 8 characters'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
             else:
                 cursor.execute("INSERT INTO accounts VALUES (NULL, %s, %s, %s)",(username,email,enc_password))
                 conn.commit()
@@ -266,8 +275,7 @@ def register():
             return render_template('register.html',msg=msg)
 
         else:
-            msg = 'Account could not be created!'
-        
+            msg = 'Account could not be created!'    
 
     elif request.method == 'POST':
         msg = "Fill in form details"
