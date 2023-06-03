@@ -4,8 +4,6 @@ from datetime import datetime
 import pymysql
 import re
 
-
-
 def get_time():
     now = datetime.now()
     time = now.strftime("%H:%M:%S")
