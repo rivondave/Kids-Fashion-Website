@@ -2,17 +2,17 @@ from flask import Flask, request, url_for, redirect, session, render_template
 from flaskext.mysql import MySQL
 import pymysql
 import re
-import datetime
+from datetime import datetime
 
 
 def get_time():
-    now = datetime.datetime.now()
+    now = datetime.now()
     time = now.strftime("%H:%M:%S")
     return time
 
 def get_date():
-    now = datetime.datetime.now()
-    date = now.strftime("%d-%m-%y")
+    now = datetime.now()
+    date = now.strftime(f"%y-%m-%d")
     return date
 
 def decrypt(list):
@@ -166,30 +166,34 @@ def cart():
         total_price = 0
     return render_template('cart.html',product=rows,total=total,total_price=total_price)
 
+
+
 @app.route('/checkout', methods=['GET','POST'])
 def checkout():
     if request.method == 'POST':
         if 'name' in request.form and 'price' in request.form and 'code' in request.form and 'image' in request.form and 'quantity' in request.form:
-            name = request.form['name']
-            price = request.form['price']
-            code = request.form['code']
-            image  = request.form['image']
-            quantity = request.form['quantity']
             username = session['username']
-            total = int(price)*int(quantity)
-            result = request.form['name']
-            print(result)
-            cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
-            user_cart = cursor.fetchone()        
-            if user_cart:
-                cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name,code,int(quantity),price,total,get_time(),get_date(),image))
-                cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
-                conn.commit()
-
-            else:
-                cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name,code,int(quantity),price,total,get_time(),get_date(),image))
-                cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
-                conn.commit()
+            name_list = request.form.getlist('name')
+            price_list = request.form.getlist('price')
+            code_list = request.form.getlist('code')
+            image_list = request.form.getlist('image')
+            quantity_list = request.form.getlist('quantity')
+            list_length = len(name_list)
+            count = 0
+            while count < list_length:
+                total = int(quantity_list[count]) * int(price_list[count])
+                cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code_list[count]))
+                user_cart = cursor.fetchone()        
+                if user_cart:
+                    cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name_list[count],code_list[count],int(quantity_list[count]),price_list[count],total,get_time(),get_date(),image_list[count]))
+                    cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
+                    conn.commit()
+                    count = count+1
+                else:
+                    cursor.execute("INSERT INTO history VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(username,name_list[count],code_list[count],int(quantity_list[count]),price_list[count],total,get_time(),get_date(),image_list[count]))
+                    cursor.execute("DELETE FROM cart WHERE USERNAME = %s",(username))
+                    conn.commit()
+                    count = count+1
     return render_template('checkout.html')
 
 @app.route('/proceed')
@@ -334,8 +338,6 @@ def decrease_quantity(code):
             total_price = int(quantity) * int(price)
             cursor.execute("UPDATE cart SET QUANTITY = %s, TOTAL_PRICE = %s WHERE USERNAME = %s AND CODE = %s",(quantity,total_price,username,code))
             conn.commit()
-
-            
     return redirect(url_for('.cart'))
 
 
@@ -353,7 +355,6 @@ def add():
             username = session['username']
             total = int(price)*int(quantity)
             
-
             cursor.execute("SELECT * FROM cart WHERE USERNAME = %s AND CODE = %s",(username,code))
             user_cart = cursor.fetchone()        
             if user_cart:
