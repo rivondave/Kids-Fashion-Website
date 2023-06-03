@@ -13,7 +13,7 @@ def get_time():
 
 def get_date():
     now = datetime.now()
-    date = now.strftime(f"%y-%m-%d")
+    date = now.strftime("%y-%m-%d")
     return date
 
 def decrypt(list):
@@ -296,12 +296,12 @@ def change_password():
             username = request.form['username']
             new_password = request.form['new_password']
             confirm_password = request.form['confirm_password']
-
+            enc_password = str(encrypt(new_password))
             cursor.execute("SELECT * FROM accounts WHERE USERNAME =%s",(username))
-            accounts = cursor.fetchone()
+            accounts = cursor.fetchall()
             if accounts:
                 if new_password == confirm_password:
-                    cursor.execute("UPDATE accounts SET PASSWORD = %s WHERE USERNAME = %s",(encrypt(new_password), username))
+                    cursor.execute("UPDATE accounts SET PASSWORD = %s WHERE USERNAME = %s",(enc_password, username))
                     conn.commit()
                     msg = 'Password updated successfully'
                 else:
